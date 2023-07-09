@@ -245,6 +245,7 @@ fn build() -> io::Result<()> {
             if env::var(concat!("CARGO_FEATURE_", $feat)).is_ok() {
                 $conf.arg(concat!("--enable-", $name));
                 println!("cargo:rustc-link-lib={}", &$name[3..]);
+                println!("cargo:rustc-link-lib={}", "vorbisenc");
             }
         };
     }
