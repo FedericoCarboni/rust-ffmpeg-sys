@@ -167,7 +167,7 @@ fn fetch() -> io::Result<()> {
         .arg("--depth=1")
         .arg("-b")
         .arg(format!("release/{}", version()))
-        .arg("https://github.com/FFmpeg/FFmpeg")
+        .arg("https://git.ffmpeg.org/ffmpeg.git")
         .arg(&clone_dest_dir)
         .status()?;
 
