@@ -167,7 +167,7 @@ fn fetch() -> io::Result<()> {
         .arg("--depth=1")
         .arg("-b")
         .arg(format!("release/{}", version()))
-        .arg("https://git.ffmpeg.org/ffmpeg.git")
+        .arg("https://github.com/FFmpeg/FFmpeg")
         .arg(&clone_dest_dir)
         .status()?;
 
@@ -215,7 +215,10 @@ fn build() -> io::Result<()> {
         ));
         configure.arg(format!(
             "--target_os={}",
-            env::var("CARGO_CFG_TARGET_OS").unwrap()
+            match &*env::var("CARGO_CFG_TARGET_OS").unwrap() {
+                "windows" => "win32",
+                s => s,
+            }
         ));
     }
 
@@ -244,8 +247,6 @@ fn build() -> io::Result<()> {
         ($conf:expr, $feat:expr, $name:expr) => {
             if env::var(concat!("CARGO_FEATURE_", $feat)).is_ok() {
                 $conf.arg(concat!("--enable-", $name));
-                println!("cargo:rustc-link-lib={}", &$name[3..]);
-                println!("cargo:rustc-link-lib={}", "vorbisenc");
             }
         };
     }
@@ -279,7 +280,7 @@ fn build() -> io::Result<()> {
     }
 
     // configure external SSL libraries
-    // enable!(configure, "BUILD_LIB_GNUTLS", "gnutls");
+    enable!(configure, "BUILD_LIB_GNUTLS", "gnutls");
     enable!(configure, "BUILD_LIB_OPENSSL", "openssl");
 
     // configure external filters
@@ -293,11 +294,11 @@ fn build() -> io::Result<()> {
     enable!(configure, "BUILD_LIB_VMAF", "libvmaf");
 
     // configure external encoders/decoders
-    // enable!(configure, "BUILD_LIB_AACPLUS", "libaacplus");
+    enable!(configure, "BUILD_LIB_AACPLUS", "libaacplus");
     enable!(configure, "BUILD_LIB_CELT", "libcelt");
-    // enable!(configure, "BUILD_LIB_DCADEC", "libdcadec");
+    enable!(configure, "BUILD_LIB_DCADEC", "libdcadec");
     enable!(configure, "BUILD_LIB_DAV1D", "libdav1d");
-    // enable!(configure, "BUILD_LIB_FAAC", "libfaac");
+    enable!(configure, "BUILD_LIB_FAAC", "libfaac");
     enable!(configure, "BUILD_LIB_FDK_AAC", "libfdk-aac");
     enable!(configure, "BUILD_LIB_GSM", "libgsm");
     enable!(configure, "BUILD_LIB_ILBC", "libilbc");
@@ -309,27 +310,27 @@ fn build() -> io::Result<()> {
     enable!(configure, "BUILD_LIB_OPENH265", "libopenh265");
     enable!(configure, "BUILD_LIB_OPENJPEG", "libopenjpeg");
     enable!(configure, "BUILD_LIB_OPUS", "libopus");
-    // enable!(configure, "BUILD_LIB_SCHROEDINGER", "libschroedinger");
+    enable!(configure, "BUILD_LIB_SCHROEDINGER", "libschroedinger");
     enable!(configure, "BUILD_LIB_SHINE", "libshine");
     enable!(configure, "BUILD_LIB_SNAPPY", "libsnappy");
     enable!(configure, "BUILD_LIB_SPEEX", "libspeex");
-    // enable!(
-    //     configure,
-    //     "BUILD_LIB_STAGEFRIGHT_H264",
-    //     "libstagefright-h264"
-    // );
+    enable!(
+        configure,
+        "BUILD_LIB_STAGEFRIGHT_H264",
+        "libstagefright-h264"
+    );
     enable!(configure, "BUILD_LIB_THEORA", "libtheora");
     enable!(configure, "BUILD_LIB_TWOLAME", "libtwolame");
-    // enable!(configure, "BUILD_LIB_UTVIDEO", "libutvideo");
-    // enable!(configure, "BUILD_LIB_VO_AACENC", "libvo-aacenc");
+    enable!(configure, "BUILD_LIB_UTVIDEO", "libutvideo");
+    enable!(configure, "BUILD_LIB_VO_AACENC", "libvo-aacenc");
     enable!(configure, "BUILD_LIB_VO_AMRWBENC", "libvo-amrwbenc");
     enable!(configure, "BUILD_LIB_VORBIS", "libvorbis");
     enable!(configure, "BUILD_LIB_VPX", "libvpx");
-    // enable!(configure, "BUILD_LIB_WAVPACK", "libwavpack");
+    enable!(configure, "BUILD_LIB_WAVPACK", "libwavpack");
     enable!(configure, "BUILD_LIB_WEBP", "libwebp");
     enable!(configure, "BUILD_LIB_X264", "libx264");
     enable!(configure, "BUILD_LIB_X265", "libx265");
-    // enable!(configure, "BUILD_LIB_AVS", "libavs");
+    enable!(configure, "BUILD_LIB_AVS", "libavs");
     enable!(configure, "BUILD_LIB_XVID", "libxvid");
 
     // other external libraries
