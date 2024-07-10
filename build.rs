@@ -1168,7 +1168,7 @@ fn main() {
         .blocklist_function("y1l")
         .blocklist_function("ynl")
         .opaque_type("__mingw_ldbl_type_t")
-        .default_enum_style(bindgen::EnumVariation::Consts)
+        .default_enum_style(bindgen::EnumVariation::ModuleConsts)
         .prepend_enum_name(false)
         .derive_eq(true)
         .size_t_is_usize(true)
